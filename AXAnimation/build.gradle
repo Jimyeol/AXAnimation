@@ -130,3 +130,5 @@ afterEvaluate {
         }
     }
 }
+
+group='com.github.Jimyeol'
