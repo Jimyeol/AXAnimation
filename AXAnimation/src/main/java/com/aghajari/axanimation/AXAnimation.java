@@ -1836,8 +1836,8 @@ public class AXAnimation implements BaseAnimation, Cloneable {
      * @param gravity One of {@link Gravity#TOP}, {@link Gravity#BOTTOM}, or {@link Gravity#CENTER_VERTICAL}.
      * @param height  target width (Animator values)
      */
-    public AXAnimation resizeHeight(int gravity, int... height) {
-        createRule(new RuleResizeHeight(gravity, getValues(true, height)));
+    public AXAnimation resizeHeight(int gravity, AXAnimatorUpdateListener<Integer> listener, int... height) {
+        createRule(new RuleResizeHeight(gravity, getValues(true, height), listener));
         return this;
     }
 
@@ -1870,9 +1870,9 @@ public class AXAnimation implements BaseAnimation, Cloneable {
      * @param width   target width
      * @param height  target height
      */
-    public AXAnimation resize(int gravity, int width, int height) {
+    public AXAnimation resize(int gravity, int width, int height, AXAnimatorUpdateListener<Integer> listener) {
         resizeWidth(gravity, width);
-        resizeHeight(gravity, height);
+        resizeHeight(gravity, listener, height);
         return this;
     }
 

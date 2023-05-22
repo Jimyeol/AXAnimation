@@ -24,6 +24,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.aghajari.axanimation.listener.AXAnimatorUpdateListener;
 import com.aghajari.axanimation.livevar.LayoutSize;
 import com.aghajari.axanimation.rules.Rule;
 import com.aghajari.axanimation.rules.RuleWithTmpData;
@@ -38,10 +39,12 @@ import com.aghajari.axanimation.utils.SizeUtils;
 public class RuleResizeHeight extends RuleWithTmpData<int[], int[]> {
 
     private final int gravity;
+    private final AXAnimatorUpdateListener<Integer> listener;
 
-    public RuleResizeHeight(int gravity, int[] data) {
+    public RuleResizeHeight(int gravity, int[] data, AXAnimatorUpdateListener<Integer> listener) {
         super(data);
         this.gravity = gravity & Gravity.VERTICAL_GRAVITY_MASK;
+        this.listener = listener;
     }
 
     @Override
@@ -59,12 +62,14 @@ public class RuleResizeHeight extends RuleWithTmpData<int[], int[]> {
             }
         }
 
-        ValueAnimator animator = ValueAnimator.ofInt(tmpData);
+        final ValueAnimator animator = ValueAnimator.ofInt(tmpData);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                update(target, (Integer) valueAnimator.getAnimatedValue());
+                Integer value = (Integer) valueAnimator.getAnimatedValue();
+                update(target, value);
                 update(view, target);
+                listener.onAnimationUpdate(view, animator, value);
             }
         });
         return initEvaluator(animator);
